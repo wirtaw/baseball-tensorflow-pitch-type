@@ -1,5 +1,3 @@
-'use strict';
-
 require('@tensorflow/tfjs-node');
 
 const path = require('path');

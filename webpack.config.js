@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * @license
  * Copyright 2019 Google LLC. All Rights Reserved.
@@ -18,14 +16,31 @@
  */
 
 const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
+  devtool: 'inline-source-map',
   entry: './src/client.js',
-  output: {path: path.resolve(__dirname, 'dist'), filename: 'bundle.js'},
-  devServer: {
-    historyApiFallback: true,
-    noInfo: true,
-    host: '0.0.0.0',
-    disableHostCheck: true,
+  output: {
+    path: path.resolve(__dirname, './dist/'),
+    filename: 'bundle.js',
+    publicPath: '/dist/',
   },
+  devServer: {
+    contentBase: path.join(__dirname, './dist/'),
+    compress: true,
+    port: 8082,
+    historyApiFallback: {disableDotRule: true},
+    noInfo: true,
+    hot: true,
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: path.join(__dirname, './src/index.html'),
+    }),
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+  ],
 };
