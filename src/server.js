@@ -27,6 +27,7 @@ async function run() {
 
   io.on('connection', (socket) => {
     socket.on('predictSample', async (sample) => {
+      console.info(`predict sample ${JSON.stringify(sample)}`);
       io.emit('predictResult', await pitchType.predictSample(sample));
     });
   });
@@ -35,6 +36,7 @@ async function run() {
   for (let i = 0; i < numTrainingIterations; i++) {
     console.log(`Training iteration : ${i + 1} / ${numTrainingIterations}`);
     await pitchType.model.fitDataset(pitchType.trainingData, {epochs: 1});
+    io.emit('predictStep', Math.ceil(((i + 1) / numTrainingIterations * 100)));
     console.log('accuracyPerClass', await pitchType.evaluate(true));
     await sleep(TIMEOUT_BETWEEN_EPOCHS_MS);
   }
