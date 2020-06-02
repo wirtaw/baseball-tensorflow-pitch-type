@@ -1,0 +1,32 @@
+{
+  "apps": [
+    {
+      "name": "baseball-tensorflow-app",
+      "script": "./src/server.js",
+      "merge_logs": true,
+      "max_restarts": 20,
+      "instances": 2,
+      "max_memory_restart": "200M",
+      "env": {
+        "PORT": 8081,
+        "NODE_ENV": "production",
+        "PATH_DATA_FILES": "/var/www/app/baseball-tensorflow-app/src/",
+        "TIMEOUT_BETWEEN_EPOCHS_MS": 400,
+        "NUMBER_TRAINING_ITERATIONS": 10,
+        "RECONNECTION_DELAY": 300,
+        "RECONNECTION_DELAY_MAX": 300
+      }
+    },
+    {
+      "name": "baseball-tensorflow-app-client",
+      "script": "./server_app.js",
+      "node_args": "--max_old_space_size=8192",
+      "instances": 1,
+      "max_memory_restart": "200M",
+      "env": {
+        "PORT": 3000,
+        "NODE_ENV": "production"
+      }
+    }
+  ]
+}
