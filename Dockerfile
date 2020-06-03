@@ -20,6 +20,8 @@ RUN npm i -g npm
 ADD package.json ./
 RUN npm i --production
 
+RUN npm i webpack webpack-dev-middleware express bulma css-loader extract-text-webpack-plugin mkdirp node-sass sass-loader style-loader webpack-cli html-webpack-plugin mini-css-extract-plugin clean-webpack-plugin --save
+
 # Install pm2 *globally* so we can run our application
 RUN npm i -g npm pm2
 
@@ -31,6 +33,6 @@ RUN cp .env.docker .env
 RUN echo 'PATH_DATA_FILES=/var/www/app/baseball-tensorflow-app/src' >> /var/www/app/baseball-tensorflow-app/.env
 
 #Expose the port
-EXPOSE 3000
+EXPOSE 3000 8081
 
 CMD ["pm2", "start", "processes.json", "--no-daemon"]

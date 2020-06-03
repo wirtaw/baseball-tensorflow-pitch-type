@@ -13,3 +13,5 @@ Dockerfile
 
 yarn.lock
 package-lock.json
+
+local.processes.json
