@@ -1,0 +1,17 @@
+.git
+.gitignore
+node_modules
+dist/
+.idea
+.DS_Store
+.env
+
+npm-debug.log
+
+Dockerfile
+.dockerignore
+
+yarn.lock
+package-lock.json
+
+local.processes.json

@@ -1,0 +1,9 @@
+version: "2"
+services:
+  web:
+    build: .
+    volumes:
+      - ./:/var/www/app/baseball-tensorflow-app
+    ports:
+      - "8081:8081"
+      - "3000:3000"

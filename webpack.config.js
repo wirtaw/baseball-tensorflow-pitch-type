@@ -19,14 +19,15 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   devtool: 'inline-source-map',
   entry: './src/client.js',
   output: {
-    path: path.resolve(__dirname, './dist/'),
-    filename: 'bundle.js',
-    publicPath: '/dist/',
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].bundle.js',
+    publicPath: '/',
   },
   devServer: {
     contentBase: path.join(__dirname, './dist/'),
@@ -60,6 +61,7 @@ module.exports = {
     }),
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
+    new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new MiniCssExtractPlugin({
       filename: 'css/main.css',
     }),

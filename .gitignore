@@ -88,3 +88,6 @@ sw.*
 
 # Vim swap files
 *.swp
+
+# pm2 environment variables file local
+local.processes.json
