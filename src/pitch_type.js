@@ -44,27 +44,27 @@ const csvTransform =
       normalize(xs.vy0, VY0_MIN, VY0_MAX),
       normalize(xs.vz0, VZ0_MIN, VZ0_MAX), normalize(xs.ax, AX_MIN, AX_MAX),
       normalize(xs.ay, AY_MIN, AY_MAX), normalize(xs.az, AZ_MIN, AZ_MAX),
-      normalize(xs.start_speed, START_SPEED_MIN, START_SPEED_MAX),
-      xs.left_handed_pitcher,
+      normalize(xs.startSpeed, START_SPEED_MIN, START_SPEED_MAX),
+      xs.leftHandedPitcher,
     ];
     return {xs: values, ys: ys.pitchCode};
   };
 
 const trainingData =
-  tf.data.csv(TRAIN_DATA_PATH, {columnConfigs: {pitchCode: {isLabel: true}}})
+  tf.data.csv(TRAIN_DATA_PATH, { columnConfigs: { pitchCode: { isLabel: true } } })
     .map(csvTransform)
     .shuffle(TRAINING_DATA_LENGTH)
     .batch(100);
 
 // Load all training data in one batch to use for evaluation
 const trainingValidationData =
-  tf.data.csv(TRAIN_DATA_PATH, {columnConfigs: {pitchCode: {isLabel: true}}})
+  tf.data.csv(TRAIN_DATA_PATH, { columnConfigs: { pitchCode: { isLabel: true } } })
     .map(csvTransform)
     .batch(TRAINING_DATA_LENGTH);
 
 // Load all test data in one batch to use for evaluation
 const testValidationData =
-  tf.data.csv(TEST_DATA_PATH, {columnConfigs: {pitchCode: {isLabel: true}}})
+  tf.data.csv(TEST_DATA_PATH, { columnConfigs: { pitchCode: { isLabel: true } } })
     .map(csvTransform)
     .batch(TEST_DATA_LENGTH);
 
@@ -73,6 +73,8 @@ model.add(tf.layers.dense({units: 250, activation: 'relu', inputShape: [8]}));
 model.add(tf.layers.dense({units: 175, activation: 'relu'}));
 model.add(tf.layers.dense({units: 150, activation: 'relu'}));
 model.add(tf.layers.dense({units: NUM_PITCH_CLASSES, activation: 'softmax'}));
+
+console.info(`model ${JSON.stringify(model.outputs[0].shape)}` );
 
 model.compile({
   optimizer: tf.train.adam(),
@@ -108,7 +110,19 @@ async function evaluate(useTestData) {
 }
 
 async function predictSample(sample) {
-  const result = model.predict(tf.tensor(sample, [1, sample.length])).arraySync();
+  console.info(`predictSample ${sample}`);
+  const values = [
+    normalize(sample[0], VX0_MIN, VX0_MAX),
+    normalize(sample[1], VY0_MIN, VY0_MAX),
+    normalize(sample[2], VZ0_MIN, VZ0_MAX),
+    normalize(sample[3], AX_MIN, AX_MAX),
+    normalize(sample[4], AY_MIN, AY_MAX),
+    normalize(sample[5], AZ_MIN, AZ_MAX),
+    normalize(sample[6], START_SPEED_MIN, START_SPEED_MAX),
+    sample[7],
+  ];
+  console.info(`${values}`);
+  const result = model.predict(tf.tensor(values, [1, values.length])).arraySync();
   let maxValue = 0;
   let predictedPitch = 7;
   for (let i = 0; i < NUM_PITCH_CLASSES; i++) {
@@ -117,6 +131,7 @@ async function predictSample(sample) {
       maxValue = result[0][i];
     }
   }
+  console.info(`result ${result} predictedPitch ${predictedPitch} '${pitchFromClassNum(predictedPitch)}'`);
   return pitchFromClassNum(predictedPitch);
 }
 
