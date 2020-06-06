@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const tf = require('@tensorflow/tfjs');
 
 const config = require(path.join(__dirname, '../config'));
@@ -14,6 +15,7 @@ function normalize(value, min, max) {
 // data can be loaded from URLs or local file paths when running in Node.js.
 const TRAIN_DATA_PATH = `file://${config.MAIN.PATH_DATA_FILES}data/pitch_type_training_data.csv`;
 const TEST_DATA_PATH = `file://${config.MAIN.PATH_DATA_FILES}data/pitch_type_test_data.csv`;
+const MODEL_DATA_PATH = `${config.MAIN.PATH_DATA_FILES}model/`;
 
 // Constants from training data
 const VX0_MIN = -18.885;
@@ -42,8 +44,10 @@ const csvTransform =
     const values = [
       normalize(xs.vx0, VX0_MIN, VX0_MAX),
       normalize(xs.vy0, VY0_MIN, VY0_MAX),
-      normalize(xs.vz0, VZ0_MIN, VZ0_MAX), normalize(xs.ax, AX_MIN, AX_MAX),
-      normalize(xs.ay, AY_MIN, AY_MAX), normalize(xs.az, AZ_MIN, AZ_MAX),
+      normalize(xs.vz0, VZ0_MIN, VZ0_MAX),
+      normalize(xs.ax, AX_MIN, AX_MAX),
+      normalize(xs.ay, AY_MIN, AY_MAX),
+      normalize(xs.az, AZ_MIN, AZ_MAX),
       normalize(xs.startSpeed, START_SPEED_MIN, START_SPEED_MAX),
       xs.leftHandedPitcher,
     ];
@@ -51,24 +55,24 @@ const csvTransform =
   };
 
 const trainingData =
-  tf.data.csv(TRAIN_DATA_PATH, { columnConfigs: { pitchCode: { isLabel: true } } })
+  tf.data.csv(TRAIN_DATA_PATH, {columnConfigs: {pitchCode: {isLabel: true}}})
     .map(csvTransform)
     .shuffle(TRAINING_DATA_LENGTH)
     .batch(100);
 
 // Load all training data in one batch to use for evaluation
 const trainingValidationData =
-  tf.data.csv(TRAIN_DATA_PATH, { columnConfigs: { pitchCode: { isLabel: true } } })
+  tf.data.csv(TRAIN_DATA_PATH, {columnConfigs: {pitchCode: {isLabel: true}}})
     .map(csvTransform)
     .batch(TRAINING_DATA_LENGTH);
 
 // Load all test data in one batch to use for evaluation
 const testValidationData =
-  tf.data.csv(TEST_DATA_PATH, { columnConfigs: { pitchCode: { isLabel: true } } })
+  tf.data.csv(TEST_DATA_PATH, {columnConfigs: {pitchCode: {isLabel: true}}})
     .map(csvTransform)
     .batch(TEST_DATA_LENGTH);
 
-const model = tf.sequential();
+let model = tf.sequential();
 model.add(tf.layers.dense({units: 250, activation: 'relu', inputShape: [8]}));
 model.add(tf.layers.dense({units: 175, activation: 'relu'}));
 model.add(tf.layers.dense({units: 150, activation: 'relu'}));
@@ -170,6 +174,41 @@ function pitchFromClassNum(classNum) {
   }
 }
 
+async function modelList() {
+  let result = [];
+  try {
+    result = await fs.opendirSync(path.join(__dirname, './model'));
+  } catch (err) {
+    console.error('no access to model!');
+  }
+
+  return result;
+}
+
+async function saveModel(filename) {
+  let saveResults = null;
+  try {
+    saveResults = await model.save(`file://${MODEL_DATA_PATH}${filename}`);
+  } catch (err) {
+    console.error('no access!');
+  }
+
+  // debugger;
+  console.dir(saveResults, {depth: 1});
+}
+
+async function loadModel(filename) {
+  let result = false;
+  try {
+    model = await tf.loadGraphModel(`file://${MODEL_DATA_PATH}${filename}`);
+    result = true;
+  } catch (err) {
+    console.error('no access!');
+  }
+
+  return result;
+}
+
 module.exports = {
   evaluate,
   model,
@@ -178,4 +217,7 @@ module.exports = {
   testValidationData,
   trainingData,
   TEST_DATA_LENGTH,
+  saveModel,
+  loadModel,
+  modelList,
 };

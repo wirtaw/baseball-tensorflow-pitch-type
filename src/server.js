@@ -24,7 +24,7 @@ async function run() {
     // below are engine.IO options
     pingInterval: 10000,
     pingTimeout: 5000,
-    cookie: false
+    cookie: false,
   });
 
   server.listen(port, () => {
@@ -38,10 +38,13 @@ async function run() {
     });
   });
 
+  const models = await pitchType.modelList();
+  console.dir(models, {depth: 1});
+
   const numTrainingIterations = config.MAIN.NUMBER_TRAINING_ITERATIONS;
   for (let i = 0; i < numTrainingIterations; i++) {
     console.info(`Training iteration : ${i + 1} / ${numTrainingIterations}`);
-    await pitchType.model.fitDataset(pitchType.trainingData, { epochs: 1 });
+    await pitchType.model.fitDataset(pitchType.trainingData, {epochs: 1});
     io.emit('predictStep', Math.ceil(((i + 1) / numTrainingIterations * 100)));
     console.info('accuracyPerClass', await pitchType.evaluate(true));
     await sleep(TIMEOUT_BETWEEN_EPOCHS_MS);
@@ -49,6 +52,7 @@ async function run() {
 
   io.emit('trainingComplete', true);
 
+  await pitchType.saveModel('pitcher-1');
   // io.emit('predictResult', await pitchType.predictSample([ 2.668, -114.333, -1.908, 4.786, 25.707, -45.21, 78, 0]));
 }
 

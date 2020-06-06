@@ -6,6 +6,7 @@
   "scripts": {
     "start-client": "node server_app.js",
     "start-server": "NODE_ENV=production node -r dotenv/config src/server.js",
+    "start-server-dev": "NODE_ENV=development node -r dotenv/config --inspect-brk src/server.js",
     "start": "pm2 start local.processes.json",
     "lint": "eslint --ignore-path .gitignore ."
   },
