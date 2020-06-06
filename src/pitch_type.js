@@ -74,7 +74,7 @@ model.add(tf.layers.dense({units: 175, activation: 'relu'}));
 model.add(tf.layers.dense({units: 150, activation: 'relu'}));
 model.add(tf.layers.dense({units: NUM_PITCH_CLASSES, activation: 'softmax'}));
 
-console.info(`model ${JSON.stringify(model.outputs[0].shape)}` );
+// console.info(`model ${JSON.stringify(model.outputs[0].shape)}` );
 
 model.compile({
   optimizer: tf.train.adam(),
@@ -110,7 +110,7 @@ async function evaluate(useTestData) {
 }
 
 async function predictSample(sample) {
-  console.info(`predictSample ${sample}`);
+  // console.info(`predictSample ${sample}`);
   const values = [
     normalize(sample[0], VX0_MIN, VX0_MAX),
     normalize(sample[1], VY0_MIN, VY0_MAX),
@@ -121,7 +121,7 @@ async function predictSample(sample) {
     normalize(sample[6], START_SPEED_MIN, START_SPEED_MAX),
     sample[7],
   ];
-  console.info(`${values}`);
+  // console.info(`${values}`);
   const result = model.predict(tf.tensor(values, [1, values.length])).arraySync();
   let maxValue = 0;
   let predictedPitch = 7;
@@ -131,7 +131,7 @@ async function predictSample(sample) {
       maxValue = result[0][i];
     }
   }
-  console.info(`result ${result} predictedPitch ${predictedPitch} '${pitchFromClassNum(predictedPitch)}'`);
+  // console.info(`result ${result} predictedPitch ${predictedPitch} '${pitchFromClassNum(predictedPitch)}'`);
   return pitchFromClassNum(predictedPitch);
 }
 

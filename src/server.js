@@ -49,7 +49,7 @@ async function run() {
 
   io.emit('trainingComplete', true);
 
-  io.emit('predictResult', await pitchType.predictSample([ 2.668, -114.333, -1.908, 4.786, 25.707, -45.21, 78, 0]));
+  // io.emit('predictResult', await pitchType.predictSample([ 2.668, -114.333, -1.908, 4.786, 25.707, -45.21, 78, 0]));
 }
 
 run();
