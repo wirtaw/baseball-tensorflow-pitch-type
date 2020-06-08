@@ -30,29 +30,33 @@ async function run() {
   server.listen(port, () => {
     console.log(`  > Running socket on port: ${port}`);
   });
+  const models = await pitchType.modelList();
+  // console.dir(models, {depth: 1});
 
   io.on('connection', (socket) => {
     socket.on('predictSample', async (sample) => {
       console.info(`predict sample ${JSON.stringify(sample)}`);
       io.emit('predictResult', await pitchType.predictSample(sample));
     });
+
+    socket.on('trainModel', async (data) => {
+      console.info(`trainModel ${JSON.stringify(data)}`);
+
+      const numTrainingIterations = data.iterations || config.MAIN.NUMBER_TRAINING_ITERATIONS;
+      for (let i = 0; i < numTrainingIterations; i++) {
+        console.info(`Training iteration : ${i + 1} / ${numTrainingIterations}`);
+        await pitchType.model.fitDataset(pitchType.trainingData, {epochs: data.epoch});
+        io.emit('predictStep', Math.ceil(((i + 1) / numTrainingIterations * 100)));
+        console.info('accuracyPerClass', await pitchType.evaluate(true));
+        await sleep(TIMEOUT_BETWEEN_EPOCHS_MS);
+      }
+
+      io.emit('trainingComplete', true);
+
+      await pitchType.saveModel(data.name);
+    });
   });
 
-  const models = await pitchType.modelList();
-  console.dir(models, {depth: 1});
-
-  const numTrainingIterations = config.MAIN.NUMBER_TRAINING_ITERATIONS;
-  for (let i = 0; i < numTrainingIterations; i++) {
-    console.info(`Training iteration : ${i + 1} / ${numTrainingIterations}`);
-    await pitchType.model.fitDataset(pitchType.trainingData, {epochs: 1});
-    io.emit('predictStep', Math.ceil(((i + 1) / numTrainingIterations * 100)));
-    console.info('accuracyPerClass', await pitchType.evaluate(true));
-    await sleep(TIMEOUT_BETWEEN_EPOCHS_MS);
-  }
-
-  io.emit('trainingComplete', true);
-
-  await pitchType.saveModel('pitcher-1');
   // io.emit('predictResult', await pitchType.predictSample([ 2.668, -114.333, -1.908, 4.786, 25.707, -45.21, 78, 0]));
 }
 

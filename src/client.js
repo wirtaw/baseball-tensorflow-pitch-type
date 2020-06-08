@@ -5,6 +5,8 @@ import './scss/main.scss';
 const predictContainer = document.getElementById('predictContainer');
 const predictButton = document.getElementById('predict-button');
 const trainingProgress = document.getElementById('trainingProgress');
+const learnButton = document.getElementById('learn-button');
+const learnStatus = document.getElementById('learn-status');
 
 const socket =
   io(`http://localhost:${config.MAIN.PORT}`,
@@ -25,8 +27,22 @@ const testData = {
 };
 let testSample = Object.values(testData); // Curveball
 
+learnButton.onclick = () => {
+  document.getElementById('learn-status').style.display = 'block';
+  learnButton.disabled = true;
+  predictButton.disabled = true;
+  const data = {
+    name: document.getElementById('data-name').value,
+    epoch: Number(document.getElementById('data-epoch').value),
+    iterations: Number(document.getElementById('data-iterations').value),
+  };
+
+  socket.emit('trainModel', data);
+};
+
 predictButton.onclick = () => {
   predictButton.disabled = true;
+  learnButton.disabled = true;
   const form = document.querySelector('form');
   const formData = new FormData(form);
 
@@ -71,8 +87,13 @@ socket.on('predictStep', (value) => {
 
 socket.on('trainingComplete', () => {
   document.getElementById('trainingProgress').value = 100;
+  learnButton.disabled = false;
+  predictButton.disabled = false;
 
   document.getElementById('trainingStatus').innerHTML = 'Training Complete';
+  setTimeout(() => {
+    document.getElementById('learn-status').style.display = 'none';
+  }, 5000);
   document.getElementById('data-sample-vx0').value = testData.vx0;
   document.getElementById('data-sample-vy0').value = testData.vy0;
   document.getElementById('data-sample-vz0').value = testData.vz0;
@@ -95,12 +116,14 @@ socket.on('trainingComplete', () => {
 
 socket.on('predictResult', (result) => {
   plotPredictResult(result);
+  learnButton.disabled = false;
 });
 
 socket.on('disconnect', () => {
   document.getElementById('trainingStatus').innerHTML = '';
   predictContainer.style.display = 'none';
   document.getElementById('waiting-msg').style.display = 'block';
+  learnButton.disabled = true;
 });
 
 function plotPredictResult(result) {

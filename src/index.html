@@ -33,120 +33,167 @@
   </style>
 </head>
 <body>
-  <h3 id="waiting-msg" class="title">Waiting for server...</h3>
-  <p>
-    <span style="font-size:16px" id="trainingStatus"></span>
-    <progress id="trainingProgress" class="progress is-small is-info" max="100">0%</progress>
-  </p>
-  <div id="predictContainer" style="display:none">
-    <div class="box">
-      <article class="media">
-        <div class="media-left">
-        </div>
-        <div class="media-content">
-          <div class="content">
-            <p>
-              Predicted Pitch Type:
-              <br>
-              <span style="font-weight:bold" id="predictResult"></span>
-            </p>
-          </div>
-        </div>
-      </article>
-    </div>
-    <form class="form">
-      <p> Sensor data: <span id="predictSample"></span> </p>
-      <div class="field is-horizontal">
-        <div class="field-label is-normal">
-          <label class="label">Ball velocity </label>
-        </div>
-        <div class="field-body">
-          <div class="field">
-            <label class="label">vx0</label>
-            <div class="control">
-              <input class="input" type="text" id="data-sample-vx0" name="data-sample-vx0" placeholder="Input vx0 value">
-            </div>
-            <p class="help">This is a vx0</p>
-          </div>
-          <div class="field">
-            <label class="label">vy0</label>
-            <div class="control">
-              <input class="input" type="text" id="data-sample-vy0" name="data-sample-vy0" placeholder="Input vy0 value">
-            </div>
-            <p class="help">This is a vy0</p>
-          </div>
-          <div class="field">
-            <label class="label">vz0</label>
-            <div class="control">
-              <input class="input" type="text" id="data-sample-vz0" name="data-sample-vz0" placeholder="Input vz0 value">
-            </div>
-            <p class="help">This is a vz0</p>
-          </div>
+  <div class="container is-fullhd">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent">
+        <h3 id="waiting-msg" class="title">Waiting for server...</h3>
+        <div id="learn-status" style="display:none">
+          <span style="font-size:16px" id="trainingStatus"></span>
+          <progress id="trainingProgress" class="progress is-small is-info" max="100">0%</progress>
         </div>
       </div>
-      <div class="field is-horizontal">
-        <div class="field-label is-normal">
-          <label class="label">Ball acceleration </label>
-        </div>
-        <div class="field-body">
+      <div class="tile is-parent">
+        <div class="container" id="learn-form">
           <div class="field">
-            <label class="label">ax</label>
+            <label
+                for="data-name"
+                class="label"
+            >Model name</label>
             <div class="control">
-              <input class="input" type="text" id="data-sample-ax" name="data-sample-ax" placeholder="Input ax value">
+              <input class="input" type="text" id="data-name" name="data-name" placeholder="Input name value">
             </div>
-            <p class="help">This is a ax</p>
-          </div>
-          <div class="field">
-            <label class="label">ay</label>
-            <div class="control">
-              <input class="input" type="text" id="data-sample-ay" name="data-sample-ay" placeholder="Input ay value">
-            </div>
-            <p class="help">This is a ay</p>
           </div>
           <div class="field">
-            <label class="label">az</label>
+            <label
+                for="epoch"
+                class="label"
+            >Epoch</label>
             <div class="control">
-              <input class="input" type="text" id="data-sample-az" name="data-sample-az" placeholder="Input az value">
+              <input class="input" type="number" id="data-epoch" name="data-epoch" placeholder="1">
             </div>
-            <p class="help">This is a az</p>
           </div>
-        </div>
-      </div>
-      <div class="field is-horizontal">
-        <div class="field-label">
-          <label class="label">Starting speed of pitch</label>
-        </div>
-        <div class="field-body">
-          <div class="field is-narrow">
+          <div class="field">
+            <label
+                for="iterations"
+                class="label"
+            >Iterations</label>
             <div class="control">
-              <input class="input" type="text" id="data-sample-speed" name="data-sample-speed" placeholder="Input speed">
+              <input class="input" type="number" id="data-iterations" name="data-iterations" placeholder="10">
             </div>
-            <p class="help">Start speed</p>
           </div>
-        </div>
-      </div>
-      <div class="field is-horizontal">
-        <div class="field-label">
-          <label class="label">Pitcher hand</label>
-        </div>
-        <div class="field-body">
-          <div class="field is-narrow">
+          <div class="field is-grouped is-grouped-centered">
             <div class="control">
-              <label class="radio">
-                <input type="radio" name="data-sample-hand" id="data-sample-left" value="1">
-                Left
-              </label>
-              <label class="radio">
-                <input type="radio" name="data-sample-hand" id="data-sample-right" value="0">
-                Right
-              </label>
+              <button class="button is-primary" id="learn-button">Learn</button>
             </div>
           </div>
         </div>
       </div>
-    </form>
-    <div class="buttons">
-      <button class="button is-primary" id="predict-button">Predict Pitch</button>
+      <div class="tile is-parent">
+
+      </div>
+      <div class="tile is-parent">
+        <div id="predictContainer" class="container" style="display:none">
+          <div class="box">
+            <article class="media">
+              <div class="media-left">
+              </div>
+              <div class="media-content">
+                <div class="content">
+                  <p>
+                    Predicted Pitch Type:
+                    <br>
+                    <span style="font-weight:bold" id="predictResult"></span>
+                  </p>
+                </div>
+              </div>
+            </article>
+          </div>
+          <form class="form">
+            <p> Sensor data: <span id="predictSample"></span> </p>
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">Ball velocity </label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <label class="label">vx0</label>
+                  <div class="control">
+                    <input class="input" type="text" id="data-sample-vx0" name="data-sample-vx0" placeholder="Input vx0 value">
+                  </div>
+                  <p class="help">This is a vx0</p>
+                </div>
+                <div class="field">
+                  <label class="label">vy0</label>
+                  <div class="control">
+                    <input class="input" type="text" id="data-sample-vy0" name="data-sample-vy0" placeholder="Input vy0 value">
+                  </div>
+                  <p class="help">This is a vy0</p>
+                </div>
+                <div class="field">
+                  <label class="label">vz0</label>
+                  <div class="control">
+                    <input class="input" type="text" id="data-sample-vz0" name="data-sample-vz0" placeholder="Input vz0 value">
+                  </div>
+                  <p class="help">This is a vz0</p>
+                </div>
+              </div>
+            </div>
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">Ball acceleration </label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <label class="label">ax</label>
+                  <div class="control">
+                    <input class="input" type="text" id="data-sample-ax" name="data-sample-ax" placeholder="Input ax value">
+                  </div>
+                  <p class="help">This is a ax</p>
+                </div>
+                <div class="field">
+                  <label class="label">ay</label>
+                  <div class="control">
+                    <input class="input" type="text" id="data-sample-ay" name="data-sample-ay" placeholder="Input ay value">
+                  </div>
+                  <p class="help">This is a ay</p>
+                </div>
+                <div class="field">
+                  <label class="label">az</label>
+                  <div class="control">
+                    <input class="input" type="text" id="data-sample-az" name="data-sample-az" placeholder="Input az value">
+                  </div>
+                  <p class="help">This is a az</p>
+                </div>
+              </div>
+            </div>
+            <div class="field is-horizontal">
+              <div class="field-label">
+                <label class="label">Starting speed of pitch</label>
+              </div>
+              <div class="field-body">
+                <div class="field is-narrow">
+                  <div class="control">
+                    <input class="input" type="text" id="data-sample-speed" name="data-sample-speed" placeholder="Input speed">
+                  </div>
+                  <p class="help">Start speed</p>
+                </div>
+              </div>
+            </div>
+            <div class="field is-horizontal">
+              <div class="field-label">
+                <label class="label">Pitcher hand</label>
+              </div>
+              <div class="field-body">
+                <div class="field is-narrow">
+                  <div class="control">
+                    <label class="radio">
+                      <input type="radio" name="data-sample-hand" id="data-sample-left" value="1">
+                      Left
+                    </label>
+                    <label class="radio">
+                      <input type="radio" name="data-sample-hand" id="data-sample-right" value="0">
+                      Right
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="buttons">
+            <button class="button is-primary" id="predict-button">Predict Pitch</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </body>
