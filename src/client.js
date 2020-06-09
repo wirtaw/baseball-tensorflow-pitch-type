@@ -14,6 +14,7 @@ const socket =
       reconnectionDelay: config.MAIN.RECONNECTION_DELAY,
       reconnectionDelayMax: config.MAIN.RECONNECTION_DELAY_MAX,
     });
+let accuracy = [];
 
 const testData = {
   vx0: 2.668,
@@ -36,6 +37,8 @@ learnButton.onclick = () => {
     epoch: Number(document.getElementById('data-epoch').value),
     iterations: Number(document.getElementById('data-iterations').value),
   };
+  accuracy = [];
+  document.getElementById('logContainer-accuracy').innerHTML = '';
 
   socket.emit('trainModel', data);
 };
@@ -79,10 +82,14 @@ socket.on('connect', () => {
   document.getElementById('trainingProgress').value = 0;
 });
 
-socket.on('predictStep', (value) => {
+socket.on('predictStep', (data) => {
   document.getElementById('waiting-msg').style.display = 'none';
   document.getElementById('trainingStatus').innerHTML = 'Training in Progress';
-  document.getElementById('trainingProgress').value = value;
+  document.getElementById('trainingProgress').value = data.percent;
+  accuracy.push(data.accuracy);
+  const innerHtml = document.getElementById('logContainer-accuracy').innerHTML;
+  document.getElementById('logContainer-accuracy').innerHTML = `${innerHtml},
+   ${JSON.stringify(data.accuracy, null, ' ')}`;
 });
 
 socket.on('trainingComplete', () => {

@@ -46,8 +46,8 @@ async function run() {
       for (let i = 0; i < numTrainingIterations; i++) {
         console.info(`Training iteration : ${i + 1} / ${numTrainingIterations}`);
         await pitchType.model.fitDataset(pitchType.trainingData, {epochs: data.epoch});
-        io.emit('predictStep', Math.ceil(((i + 1) / numTrainingIterations * 100)));
-        console.info('accuracyPerClass', await pitchType.evaluate(true));
+        const accuracy = await pitchType.evaluate(true);
+        io.emit('predictStep', {percent: Math.ceil(((i + 1) / numTrainingIterations * 100)) , accuracy});
         await sleep(TIMEOUT_BETWEEN_EPOCHS_MS);
       }
 
