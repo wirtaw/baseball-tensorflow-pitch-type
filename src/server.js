@@ -30,10 +30,12 @@ async function run() {
   server.listen(port, () => {
     console.log(`  > Running socket on port: ${port}`);
   });
-  const models = await pitchType.modelList();
-  // console.dir(models, {depth: 1});
 
   io.on('connection', (socket) => {
+    socket.on('getModels', async () => {
+      io.emit('modelList', await pitchType.modelList());
+    });
+
     socket.on('predictSample', async (sample) => {
       console.info(`predict sample ${JSON.stringify(sample)}`);
       io.emit('predictResult', await pitchType.predictSample(sample));

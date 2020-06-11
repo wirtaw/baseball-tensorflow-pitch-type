@@ -175,14 +175,21 @@ function pitchFromClassNum(classNum) {
 }
 
 async function modelList() {
-  let result = [];
-  try {
-    result = await fs.opendirSync(path.join(__dirname, './model'));
-  } catch (err) {
-    console.error('no access to model!');
-  }
-
-  return result;
+  return new Promise(resolve => {
+    try {
+      const result = [];
+      fs.readdir(path.join(__dirname, './model'), function(err, items) {
+        if (err) {
+          resolve(result);
+        } else {
+          resolve(items);
+        }
+      });
+    } catch (err) {
+      console.error('no access to model!');
+      resolve([]);
+    }
+  });
 }
 
 async function saveModel(filename) {

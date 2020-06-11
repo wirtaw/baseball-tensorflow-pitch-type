@@ -15,6 +15,7 @@ const socket =
       reconnectionDelayMax: config.MAIN.RECONNECTION_DELAY_MAX,
     });
 let accuracy = [];
+let modelsList = [];
 
 const testData = {
   vx0: 2.668,
@@ -80,6 +81,7 @@ socket.on('connect', () => {
   document.getElementById('waiting-msg').style.display = 'none';
   document.getElementById('trainingStatus').innerHTML = 'Training in Progress';
   document.getElementById('trainingProgress').value = 0;
+  socket.emit('getModels');
 });
 
 socket.on('predictStep', (data) => {
@@ -90,6 +92,11 @@ socket.on('predictStep', (data) => {
   const innerHtml = document.getElementById('logContainer-accuracy').innerHTML;
   document.getElementById('logContainer-accuracy').innerHTML = `${innerHtml},
    ${JSON.stringify(data.accuracy, null, ' ')}`;
+});
+
+socket.on('modelList', (data) => {
+  modelsList = [...data];
+  document.getElementById('logContainer-modelsList').innerHTML = `${JSON.stringify(data, null, ' ')}`;
 });
 
 socket.on('trainingComplete', () => {
@@ -119,6 +126,7 @@ socket.on('trainingComplete', () => {
   }
 
   predictContainer.style.display = 'block';
+  socket.emit('getModels');
 });
 
 socket.on('predictResult', (result) => {
