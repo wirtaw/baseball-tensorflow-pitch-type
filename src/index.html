@@ -33,78 +33,171 @@
     .accuracy {
       max-height: 300px;
     }
+    pre,
+    .message {
+      max-width: 960px;
+    }
+
+    li {margin: 10px}
+
+    .hero.is-primary {
+      background: linear-gradient(to top right, #524ad0 10%, #D099FA);
+    }
+    .menu-list li a:hover {
+      background: #d9d9d9;
+    }
+
   </style>
 </head>
 <body>
+  <section class="hero is-primary">
+    <div class="hero-body">
+      <div class="columns">
+        <div class="column is-12">
+          <div class="container content">
+            <i class="is-large fab fa-discord"></i>
+            <i class="is-large fas fa-code"></i>
+            <h1 class="title">Tensorflow for <em>NodeJS</em> Client side</h1>
+            <h3 class="subtitle">
+              Collection of code goodies for next-level dev
+            </h3>
+            <h5 id="waiting-msg" class="title">Waiting for server...</h5>
+            <div id="learn-status" style="display:none">
+              <span style="font-size:16px" id="trainingStatus"></span>
+              <progress id="trainingProgress" class="progress is-small is-info" max="100">0%</progress>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
   <section class="section">
-    <div class="container is-fullhd">
-      <div class="tile is-ancestor">
-        <div class="tile is-parent">
-          <h3 id="waiting-msg" class="title">Waiting for server...</h3>
-          <div id="learn-status" style="display:none">
-            <span style="font-size:16px" id="trainingStatus"></span>
-            <progress id="trainingProgress" class="progress is-small is-info" max="100">0%</progress>
-          </div>
+    <div class="container">
+      <div class="columns">
+        <div class="column is-narrow">
+          <aside class="is-medium menu" style="width: 200px;">
+            <p class="menu-label title is-5">
+              categories
+            </p>
+            <ul class="menu-list">
+              <li><a href="#learnform" class="is-active"> Learn form</a></li>
+              <li><a href="#pitcherform" class="is-active"> Sensor data form</a></li>
+              <li class="is-right"><a href="#trainingaccuracy" class="is-active"> Training accuracy</a></li>
+              <li><a href="#logContainer-modelList" class="is-active"> Model list</a></li>
+            </ul>
+          </aside>
         </div>
-        <div class="tile is-parent">
-          <div class="container" id="learn-form">
-            <div class="field">
-              <label
-                  for="data-name"
-                  class="label"
-              >Model name</label>
-              <div class="control">
-                <input class="input" type="text" id="data-name" name="data-name" placeholder="Input name value">
-              </div>
-            </div>
-            <div class="field">
-              <label
-                  for="epoch"
-                  class="label"
-              >Epoch</label>
-              <div class="control">
-                <input class="input" type="number" id="data-epoch" name="data-epoch" placeholder="1">
-              </div>
-            </div>
-            <div class="field">
-              <label
-                  for="iterations"
-                  class="label"
-              >Iterations</label>
-              <div class="control">
-                <input class="input" type="number" id="data-iterations" name="data-iterations" placeholder="10">
-              </div>
-            </div>
-            <div class="field is-grouped is-grouped-centered">
-              <div class="control">
-                <button class="button is-primary" id="learn-button">Learn</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="tile is-parent">
-          <div id="logContainer" class="container">
+        <div class="column">
+          <div class="content is-medium">
             <div class="columns">
-              <div class="column">
-                <div class="box">
-                  <article class="media">
-                    <div class="media-content">
-                      <div class="content">
-                        <h3>Training accuracy</h3>
-                        <pre id="logContainer-accuracy" class="accuracy"></pre>
+              <div class="column is-12">
+                <div id="predictContainer" class="container" style="display:none">
+                  <form class="form">
+                    <p> Sensor data: <span id="predictSample"></span> </p>
+                    <div class="field is-horizontal">
+                      <div class="field-label is-normal">
+                        <label class="label">Ball velocity </label>
+                      </div>
+                      <div class="field-body">
+                        <div class="field">
+                          <label class="label">vx0</label>
+                          <div class="control">
+                            <input class="input" type="text" id="data-sample-vx0" name="data-sample-vx0" placeholder="Input vx0 value">
+                          </div>
+                          <p class="help">This is a vx0</p>
+                        </div>
+                        <div class="field">
+                          <label class="label">vy0</label>
+                          <div class="control">
+                            <input class="input" type="text" id="data-sample-vy0" name="data-sample-vy0" placeholder="Input vy0 value">
+                          </div>
+                          <p class="help">This is a vy0</p>
+                        </div>
+                        <div class="field">
+                          <label class="label">vz0</label>
+                          <div class="control">
+                            <input class="input" type="text" id="data-sample-vz0" name="data-sample-vz0" placeholder="Input vz0 value">
+                          </div>
+                          <p class="help">This is a vz0</p>
+                        </div>
                       </div>
                     </div>
-                  </article>
+                    <div class="field is-horizontal">
+                      <div class="field-label is-normal">
+                        <label class="label">Ball acceleration </label>
+                      </div>
+                      <div class="field-body">
+                        <div class="field">
+                          <label class="label">ax</label>
+                          <div class="control">
+                            <input class="input" type="text" id="data-sample-ax" name="data-sample-ax" placeholder="Input ax value">
+                          </div>
+                          <p class="help">This is a ax</p>
+                        </div>
+                        <div class="field">
+                          <label class="label">ay</label>
+                          <div class="control">
+                            <input class="input" type="text" id="data-sample-ay" name="data-sample-ay" placeholder="Input ay value">
+                          </div>
+                          <p class="help">This is a ay</p>
+                        </div>
+                        <div class="field">
+                          <label class="label">az</label>
+                          <div class="control">
+                            <input class="input" type="text" id="data-sample-az" name="data-sample-az" placeholder="Input az value">
+                          </div>
+                          <p class="help">This is a az</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="field is-horizontal">
+                      <div class="field-label">
+                        <label class="label">Starting speed of pitch</label>
+                      </div>
+                      <div class="field-body">
+                        <div class="field is-narrow">
+                          <div class="control">
+                            <input class="input" type="text" id="data-sample-speed" name="data-sample-speed" placeholder="Input speed">
+                          </div>
+                          <p class="help">Start speed</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="field is-horizontal">
+                      <div class="field-label">
+                        <label class="label">Pitcher hand</label>
+                      </div>
+                      <div class="field-body">
+                        <div class="field is-narrow">
+                          <div class="control">
+                            <label class="radio">
+                              <input type="radio" name="data-sample-hand" id="data-sample-left" value="1">
+                              Left
+                            </label>
+                            <label class="radio">
+                              <input type="radio" name="data-sample-hand" id="data-sample-right" value="0">
+                              Right
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                  <div class="buttons">
+                    <button class="button is-primary" id="predict-button">Predict Pitch</button>
+                  </div>
                 </div>
               </div>
-              <div class="column">
+            </div>
+            <div class="columns" id="predictResultColumn" style="display:none">
+              <div class="column is-12">
                 <div class="box">
                   <article class="media">
                     <div class="media-left">
                     </div>
                     <div class="media-content">
                       <div class="content">
-                        <h3>Predicted Pitch Type</h3>
+                        <h6>Predicted Pitch Type</h6>
                         <p>
                           <span style="font-weight:bold" id="predictResult"></span>
                         </p>
@@ -113,123 +206,93 @@
                   </article>
                 </div>
               </div>
-              <div class="column">
-                <div class="box">
-                  <article class="media">
-                    <div class="media-left">
+            </div>
+            <div class="columns">
+              <div class="column is-12">
+                <div class="container" id="learn-form">
+                  <div class="field">
+                    <label
+                        for="data-name"
+                        class="label"
+                    >Model name</label>
+                    <div class="control">
+                      <input class="input" type="text" id="data-name" name="data-name" placeholder="Input name value">
                     </div>
-                    <div class="media-content">
-                      <div class="content">
-                        <h3>Model list</h3>
-                        <pre id="logContainer-modelList" class="accuracy"></pre>
-                      </div>
+                  </div>
+                  <div class="field">
+                    <label
+                        for="epoch"
+                        class="label"
+                    >Epoch</label>
+                    <div class="control">
+                      <input class="input" type="number" id="data-epoch" name="data-epoch" placeholder="1">
                     </div>
-                  </article>
+                  </div>
+                  <div class="field">
+                    <label
+                        for="iterations"
+                        class="label"
+                    >Iterations</label>
+                    <div class="control">
+                      <input class="input" type="number" id="data-iterations" name="data-iterations" placeholder="10">
+                    </div>
+                  </div>
+                  <div class="field is-grouped is-grouped-centered">
+                    <div class="control">
+                      <button class="button is-primary" id="learn-button">Learn</button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="tile is-parent">
-          <div id="predictContainer" class="container" style="display:none">
-            <form class="form">
-              <p> Sensor data: <span id="predictSample"></span> </p>
-              <div class="field is-horizontal">
-                <div class="field-label is-normal">
-                  <label class="label">Ball velocity </label>
-                </div>
-                <div class="field-body">
-                  <div class="field">
-                    <label class="label">vx0</label>
-                    <div class="control">
-                      <input class="input" type="text" id="data-sample-vx0" name="data-sample-vx0" placeholder="Input vx0 value">
+            <div class="columns">
+              <div class="column is-12">
+                <div id="logContainer" class="container">
+                  <div class="columns">
+                    <div class="column">
+                      <div class="box">
+                        <article class="media">
+                          <div class="media-content">
+                            <div class="content">
+                              <h6>Training accuracy</h6>
+                              <pre id="logContainer-accuracy" class="accuracy"></pre>
+                            </div>
+                          </div>
+                        </article>
+                      </div>
                     </div>
-                    <p class="help">This is a vx0</p>
-                  </div>
-                  <div class="field">
-                    <label class="label">vy0</label>
-                    <div class="control">
-                      <input class="input" type="text" id="data-sample-vy0" name="data-sample-vy0" placeholder="Input vy0 value">
-                    </div>
-                    <p class="help">This is a vy0</p>
-                  </div>
-                  <div class="field">
-                    <label class="label">vz0</label>
-                    <div class="control">
-                      <input class="input" type="text" id="data-sample-vz0" name="data-sample-vz0" placeholder="Input vz0 value">
-                    </div>
-                    <p class="help">This is a vz0</p>
-                  </div>
-                </div>
-              </div>
-              <div class="field is-horizontal">
-                <div class="field-label is-normal">
-                  <label class="label">Ball acceleration </label>
-                </div>
-                <div class="field-body">
-                  <div class="field">
-                    <label class="label">ax</label>
-                    <div class="control">
-                      <input class="input" type="text" id="data-sample-ax" name="data-sample-ax" placeholder="Input ax value">
-                    </div>
-                    <p class="help">This is a ax</p>
-                  </div>
-                  <div class="field">
-                    <label class="label">ay</label>
-                    <div class="control">
-                      <input class="input" type="text" id="data-sample-ay" name="data-sample-ay" placeholder="Input ay value">
-                    </div>
-                    <p class="help">This is a ay</p>
-                  </div>
-                  <div class="field">
-                    <label class="label">az</label>
-                    <div class="control">
-                      <input class="input" type="text" id="data-sample-az" name="data-sample-az" placeholder="Input az value">
-                    </div>
-                    <p class="help">This is a az</p>
-                  </div>
-                </div>
-              </div>
-              <div class="field is-horizontal">
-                <div class="field-label">
-                  <label class="label">Starting speed of pitch</label>
-                </div>
-                <div class="field-body">
-                  <div class="field is-narrow">
-                    <div class="control">
-                      <input class="input" type="text" id="data-sample-speed" name="data-sample-speed" placeholder="Input speed">
-                    </div>
-                    <p class="help">Start speed</p>
-                  </div>
-                </div>
-              </div>
-              <div class="field is-horizontal">
-                <div class="field-label">
-                  <label class="label">Pitcher hand</label>
-                </div>
-                <div class="field-body">
-                  <div class="field is-narrow">
-                    <div class="control">
-                      <label class="radio">
-                        <input type="radio" name="data-sample-hand" id="data-sample-left" value="1">
-                        Left
-                      </label>
-                      <label class="radio">
-                        <input type="radio" name="data-sample-hand" id="data-sample-right" value="0">
-                        Right
-                      </label>
+                    <div class="column">
+                      <div class="box">
+                        <article class="media">
+                          <div class="media-left">
+                          </div>
+                          <div class="media-content">
+                            <div class="content">
+                              <h6>Model list</h6>
+                              <pre id="logContainer-modelsList" class="accuracy"></pre>
+                            </div>
+                          </div>
+                        </article>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </form>
-            <div class="buttons">
-              <button class="button is-primary" id="predict-button">Predict Pitch</button>
             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+<script>
+  (function() {
+    var burger = document.querySelector('.burger');
+    var menu = document.querySelector('#'+burger.dataset.target);
+    burger.addEventListener('click', function() {
+      burger.classList.toggle('is-active');
+      menu.classList.toggle('is-active');
+    });
+  })();
+</script>
 </body>
 </html>

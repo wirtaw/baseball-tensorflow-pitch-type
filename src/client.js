@@ -3,6 +3,7 @@ import config from '../config';
 import './scss/main.scss';
 
 const predictContainer = document.getElementById('predictContainer');
+const predictResultColumn = document.getElementById('predictResultColumn');
 const predictButton = document.getElementById('predict-button');
 const trainingProgress = document.getElementById('trainingProgress');
 const learnButton = document.getElementById('learn-button');
@@ -31,6 +32,7 @@ let testSample = Object.values(testData); // Curveball
 
 learnButton.onclick = () => {
   document.getElementById('learn-status').style.display = 'block';
+  predictResultColumn.style.display = 'none';
   learnButton.disabled = true;
   predictButton.disabled = true;
   const data = {
@@ -126,6 +128,7 @@ socket.on('trainingComplete', () => {
   }
 
   predictContainer.style.display = 'block';
+  predictResultColumn.style.display = 'block';
   socket.emit('getModels');
 });
 
