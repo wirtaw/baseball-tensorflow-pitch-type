@@ -98,7 +98,43 @@ socket.on('predictStep', (data) => {
 
 socket.on('modelList', (data) => {
   modelsList = [...data];
-  document.getElementById('logContainer-modelsList').innerHTML = `${JSON.stringify(data, null, ' ')}`;
+  const modelListAppDiv = document.getElementById('logContainer-modelsList');
+  modelListAppDiv.innerHTML = '';
+
+  modelsList.forEach(name => {
+    const id = name.replace(/ /gi, '-');
+
+    const buttonsId = `model-buttons-${id}`;
+    const buttonsBlock = document.createElement('div');
+    buttonsBlock.setAttribute('class', 'buttons');
+    buttonsBlock.setAttribute('id', buttonsId);
+
+    modelListAppDiv.appendChild(buttonsBlock);
+
+    const buttonsTextId = `model-button-text-${id}`;
+    const buttonText = document.createElement('button');
+    buttonText.setAttribute('class', 'button is-text');
+    buttonText.setAttribute('id', buttonsTextId);
+    buttonText.innerHTML = `${name}`;
+
+    buttonsBlock.appendChild(buttonText);
+
+    const buttonsLoadId = `model-button-load-${id}`;
+    const buttonLoad = document.createElement('button');
+    buttonLoad.setAttribute('class', 'button is-primary');
+    buttonLoad.setAttribute('id', buttonsLoadId);
+    buttonLoad.innerHTML = 'Load';
+
+    buttonsBlock.appendChild(buttonLoad);
+
+    const buttonsRemoveId = `model-button-remove-${id}`;
+    const buttonRemove = document.createElement('button');
+    buttonRemove.setAttribute('class', 'button is-danger');
+    buttonRemove.setAttribute('id', buttonsRemoveId);
+    buttonRemove.innerHTML = 'Remove';
+
+    buttonsBlock.appendChild(buttonRemove);
+  });
 });
 
 socket.on('trainingComplete', () => {

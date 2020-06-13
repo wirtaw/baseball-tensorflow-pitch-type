@@ -269,7 +269,7 @@
                           <div class="media-content">
                             <div class="content">
                               <h6>Model list</h6>
-                              <pre id="logContainer-modelsList" class="accuracy"></pre>
+                              <div id="logContainer-modelsList" class="accuracy"></div>
                             </div>
                           </div>
                         </article>
@@ -284,15 +284,5 @@
       </div>
     </div>
   </section>
-<script>
-  (function() {
-    var burger = document.querySelector('.burger');
-    var menu = document.querySelector('#'+burger.dataset.target);
-    burger.addEventListener('click', function() {
-      burger.classList.toggle('is-active');
-      menu.classList.toggle('is-active');
-    });
-  })();
-</script>
 </body>
 </html>
