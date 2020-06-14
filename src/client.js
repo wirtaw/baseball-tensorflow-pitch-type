@@ -127,6 +127,14 @@ socket.on('modelList', (data) => {
 
     buttonsBlock.appendChild(buttonLoad);
 
+    document.getElementById(buttonsLoadId).addEventListener('click', (
+      function(idLocal) {
+        return function() {
+          console.dir(idLocal, {depth: 1});
+          socket.emit('loadModel', {name: idLocal});
+        };
+      })(id));
+
     const buttonsRemoveId = `model-button-remove-${id}`;
     const buttonRemove = document.createElement('button');
     buttonRemove.setAttribute('class', 'button is-danger');

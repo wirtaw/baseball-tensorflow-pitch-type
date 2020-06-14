@@ -57,6 +57,16 @@ async function run() {
 
       await pitchType.saveModel(data.name);
     });
+
+    socket.on('loadModel', async (data) => {
+      console.info(`loadModel ${JSON.stringify(data)}`);
+      const loadResult = await pitchType.loadModel(data.name);
+
+      if (loadResult) {
+        io.emit('predictStep', {percent: 100, accuracy: loadResult});
+        io.emit('trainingComplete', true);
+      }
+    });
   });
 
   // io.emit('predictResult', await pitchType.predictSample([ 2.668, -114.333, -1.908, 4.786, 25.707, -45.21, 78, 0]));
