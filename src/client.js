@@ -130,8 +130,9 @@ socket.on('modelList', (data) => {
     document.getElementById(buttonsLoadId).addEventListener('click', (
       function(idLocal) {
         return function() {
-          console.dir(idLocal, {depth: 1});
-          socket.emit('loadModel', {name: idLocal});
+          // console.dir(idLocal, {depth: 1});
+          // console.dir(testSample, {depth: 1});
+          socket.emit('loadModel', {name: idLocal, sample: testSample});
         };
       })(id));
 

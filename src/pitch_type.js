@@ -195,7 +195,11 @@ async function modelList() {
 async function saveModel(filename) {
   let saveResults = null;
   try {
-    saveResults = await model.save(`file://${MODEL_DATA_PATH}${filename}`);
+    saveResults = await model.save(`file://${MODEL_DATA_PATH}${filename}`,
+      {
+        trainableOnly: true,
+        includeOptimizer: true,
+      });
   } catch (err) {
     console.error('no access!');
   }
@@ -204,13 +208,32 @@ async function saveModel(filename) {
   console.dir(saveResults, {depth: 1});
 }
 
-async function loadModel(filename) {
+async function loadModel(filename, sample) {
   let result = false;
   try {
-    model = await tf.loadGraphModel(`file://${MODEL_DATA_PATH}${filename}`);
+    // console.info(`filename ${filename} 'file://${MODEL_DATA_PATH}${filename}/model.json'`);
+    model = await tf.loadLayersModel(`file://${MODEL_DATA_PATH}${filename}/model.json`);
+    // console.dir(model, {depth: 1});
+    // console.dir(sample, {depth: 1});
+
     result = true;
+
+    const values = [
+      normalize(sample[0], VX0_MIN, VX0_MAX),
+      normalize(sample[1], VY0_MIN, VY0_MAX),
+      normalize(sample[2], VZ0_MIN, VZ0_MAX),
+      normalize(sample[3], AX_MIN, AX_MAX),
+      normalize(sample[4], AY_MIN, AY_MAX),
+      normalize(sample[5], AZ_MIN, AZ_MAX),
+      normalize(sample[6], START_SPEED_MIN, START_SPEED_MAX),
+      sample[7],
+    ];
+    // console.info(`${values}`);
+    const resultPredict = model.predict(tf.tensor(values, [1, values.length])).arraySync();
+
+    // console.info(`${resultPredict}`);
   } catch (err) {
-    console.error('no access!');
+    console.error('no access!', err);
   }
 
   return result;

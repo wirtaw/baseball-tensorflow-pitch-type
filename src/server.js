@@ -59,8 +59,8 @@ async function run() {
     });
 
     socket.on('loadModel', async (data) => {
-      console.info(`loadModel ${JSON.stringify(data)}`);
-      const loadResult = await pitchType.loadModel(data.name);
+      // console.info(`loadModel ${JSON.stringify(data)}`);
+      const loadResult = await pitchType.loadModel(data.name, data.sample);
 
       if (loadResult) {
         io.emit('predictStep', {percent: 100, accuracy: loadResult});
