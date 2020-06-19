@@ -1,6 +1,8 @@
 const path = require('path');
 const fs = require('fs');
 const tf = require('@tensorflow/tfjs');
+const stat = require('fs').statSync;
+const AdmZip = require('adm-zip');
 
 const config = require(path.join(__dirname, '../config'));
 
@@ -36,6 +38,26 @@ const START_SPEED_MAX = 104.4;
 const NUM_PITCH_CLASSES = 7;
 const TRAINING_DATA_LENGTH = 7000;
 const TEST_DATA_LENGTH = 700;
+
+/**
+ * @param {String} zipFileName
+ * @param {Array<String>} pathNames
+ */
+function newArchive(zipFileName, pathNames) {
+  const zip = new AdmZip();
+
+  pathNames.forEach(path => {
+    const p = stat(path);
+    if (p.isFile()) {
+      zip.addLocalFile(path);
+    } else if (p.isDirectory()) {
+      zip.addLocalFolder(path, path);
+    }
+  });
+
+  console.info(`newArchive ${zipFileName}`);
+  zip.writeZip(zipFileName);
+}
 
 // Converts a row from the CSV into features and labels.
 // Each feature field is normalized within training data constants
@@ -239,6 +261,24 @@ async function loadModel(filename, sample) {
   return result;
 }
 
+async function exportModel(modelname) {
+  let result = '';
+  try {
+    const zipName = `${MODEL_DATA_PATH}${modelname}.zip`;
+    newArchive(zipName, [
+      `${path.join(__dirname, './model')}/${modelname}/model.json`,
+      `${path.join(__dirname, './model')}/${modelname}/weights.bin`,
+    ]);
+
+    result = fs.readFileSync(zipName, {encode: 'utf8'});
+    console.dir(result, {depth: 1});
+  } catch (err) {
+    console.error('no export!', err);
+  }
+
+  return result;
+}
+
 module.exports = {
   evaluate,
   model,
@@ -250,4 +290,5 @@ module.exports = {
   saveModel,
   loadModel,
   modelList,
+  exportModel,
 };

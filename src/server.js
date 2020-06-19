@@ -67,6 +67,15 @@ async function run() {
         io.emit('trainingComplete', true);
       }
     });
+
+    socket.on('exportModel', async (data) => {
+      // console.info(`loadModel ${JSON.stringify(data)}`);
+      const exportResult = await pitchType.exportModel(data.name);
+
+      if (exportResult) {
+        io.emit('downloadModal', exportResult);
+      }
+    });
   });
 
   // io.emit('predictResult', await pitchType.predictSample([ 2.668, -114.333, -1.908, 4.786, 25.707, -45.21, 78, 0]));

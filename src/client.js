@@ -136,6 +136,21 @@ socket.on('modelList', (data) => {
         };
       })(id));
 
+    const buttonsExportId = `model-button-export-${id}`;
+    const buttonExport = document.createElement('button');
+    buttonExport.setAttribute('class', 'button is-primary');
+    buttonExport.setAttribute('id', buttonsExportId);
+    buttonExport.innerHTML = 'Export';
+
+    buttonsBlock.appendChild(buttonExport);
+
+    document.getElementById(buttonsExportId).addEventListener('click', (
+      function(idLocal) {
+        return function() {
+          socket.emit('exportModel', {name: idLocal});
+        };
+      })(id));
+
     const buttonsRemoveId = `model-button-remove-${id}`;
     const buttonRemove = document.createElement('button');
     buttonRemove.setAttribute('class', 'button is-danger');
@@ -180,6 +195,10 @@ socket.on('trainingComplete', () => {
 socket.on('predictResult', (result) => {
   plotPredictResult(result);
   learnButton.disabled = false;
+});
+
+socket.on('downloadModal', (str) => {
+  console.dir(str, {depth: 1});
 });
 
 socket.on('disconnect', () => {
