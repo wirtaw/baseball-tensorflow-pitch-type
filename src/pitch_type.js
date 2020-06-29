@@ -147,8 +147,12 @@ async function predictSample(sample) {
     normalize(sample[6], START_SPEED_MIN, START_SPEED_MAX),
     sample[7],
   ];
-  // console.info(`${values}`);
-  const result = model.predict(tf.tensor(values, [1, values.length])).arraySync();
+  console.info(`values ${values}`);
+  const tensor = tf.tensor(values, [1, values.length]);
+  console.info(`tensor ${tensor.toString()}`);
+  const result = model.predict(tensor).arraySync();
+
+  console.info(`result ${JSON.stringify(result)}`);
   let maxValue = 0;
   let predictedPitch = 7;
   for (let i = 0; i < NUM_PITCH_CLASSES; i++) {
@@ -157,6 +161,7 @@ async function predictSample(sample) {
       maxValue = result[0][i];
     }
   }
+  console.info(`predictedPitch ${predictedPitch}`);
   // console.info(`result ${result} predictedPitch ${predictedPitch} '${pitchFromClassNum(predictedPitch)}'`);
   return pitchFromClassNum(predictedPitch);
 }
@@ -270,8 +275,8 @@ async function exportModel(modelname) {
       `${path.join(__dirname, './model')}/${modelname}/weights.bin`,
     ]);
 
-    result = fs.readFileSync(zipName, {encode: 'utf8'});
-    console.dir(result, {depth: 1});
+    result = (fs.readFileSync(zipName, {encode: 'utf8'})).toString();
+    // console.dir(result, {depth: 1});
   } catch (err) {
     console.error('no export!', err);
   }
