@@ -25,6 +25,10 @@ async function run() {
     pingInterval: 10000,
     pingTimeout: 5000,
     cookie: false,
+    cors: {
+      origin: `http://localhost:${config.MAIN.CLIENT_PORT}`,
+      methods: ['GET', 'POST'],
+    },
   });
 
   server.listen(port, () => {

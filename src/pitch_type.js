@@ -4,7 +4,7 @@ const tf = require('@tensorflow/tfjs');
 const stat = require('fs').statSync;
 const AdmZip = require('adm-zip');
 
-const config = require(path.join(__dirname, '../config'));
+const config = require('../config');
 
 // util function to normalize a value between a given range.
 function normalize(value, min, max) {

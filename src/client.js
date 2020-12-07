@@ -1,6 +1,8 @@
 import io from 'socket.io-client';
-import config from '../config';
+import config from './../config.client.js';
 import './scss/main.scss';
+
+console.info('Client load');
 
 const predictContainer = document.getElementById('predictContainer');
 const predictResultColumn = document.getElementById('predictResultColumn');

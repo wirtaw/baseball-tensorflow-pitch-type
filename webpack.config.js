@@ -59,7 +59,6 @@ module.exports = {
       filename: 'index.html',
       template: path.join(__dirname, './src/index.html'),
     }),
-    new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin({cleanStaleWebpackAssets: false}),
     new MiniCssExtractPlugin({
