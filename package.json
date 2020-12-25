@@ -35,11 +35,11 @@
     "node-fetch": ">=2.6.1"
   },
   "dependencies": {
-    "@tensorflow/tfjs-node": "2.4.0",
-    "adm-zip": "^0.4.16",
-    "argparse": "^1.0.10",
+    "@tensorflow/tfjs-node": "2.8.1",
+    "adm-zip": "^0.5.1",
+    "argparse": "^2.0.1",
     "dotenv": "^8.2.0",
-    "pm2": "4.4.1",
-    "socket.io": "~2.3.0"
+    "pm2": "4.5.1",
+    "socket.io": "~3.0.4"
   }
 }
