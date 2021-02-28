@@ -1,15 +1,14 @@
 import io from 'socket.io-client';
 import config from './../config.client.js';
-import './scss/main.scss';
 
 console.info('Client load');
 
 const predictContainer = document.getElementById('predictContainer');
 const predictResultColumn = document.getElementById('predictResultColumn');
 const predictButton = document.getElementById('predict-button');
-const trainingProgress = document.getElementById('trainingProgress');
+// const trainingProgress = document.getElementById('trainingProgress');
 const learnButton = document.getElementById('learn-button');
-const learnStatus = document.getElementById('learn-status');
+// const learnStatus = document.getElementById('learn-status');
 
 const socket =
   io(`http://localhost:${config.MAIN.PORT}`,
@@ -216,6 +215,7 @@ function plotPredictResult(result) {
   console.info(result);
 }
 
+/*
 function downloadBlob(blob, filename) {
   // Create an object URL for the blob object
   const url = URL.createObjectURL(blob);
@@ -253,3 +253,4 @@ function downloadBlob(blob, filename) {
   // in order to attach it to the DOM or use it in some other way
   return a;
 }
+*/

@@ -1,0 +1,24 @@
+{
+  "env": {
+    "node": true,
+    "browser": true,
+    "es6": true
+  },
+  "extends": ["eslint:recommended"],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "modules": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "rules": {
+    // Override our default settings just for this directory
+    "comma-dangle": 0,
+    "no-unused-vars": "warn",
+    "no-console": 1,
+    "no-unexpected-multiline": "warn"
+  }
+}

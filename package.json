@@ -4,43 +4,33 @@
   "description": "Deep learning models for classifying baseball metrics",
   "main": "src/server.js",
   "scripts": {
-    "start-client": "node server_app.js",
     "start-server": "NODE_ENV=production node -r dotenv/config src/server.js",
     "start-server-dev": "NODE_ENV=development node -r dotenv/config --inspect-brk src/server.js",
     "start": "pm2 start local.processes.json",
-    "lint": "eslint --ignore-path .gitignore ."
+    "lint": "eslint --ignore-path .gitignore .",
+    "dev": "parcel src/public/index.html --open",
+    "pro": "parcel build src/public/index.html --no-source-maps --no-cache"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "bulma": "^0.8.2",
-    "clang-format": "~1.2.3",
-    "clean-webpack-plugin": "^3.0.0",
-    "css-loader": "^3.6.0",
-    "eslint": "^6.8.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.21.0",
     "eslint-config-loopback": "^13.1.0",
-    "express": "^4.17.1",
-    "extract-text-webpack-plugin": "^4.0.0-beta.0",
-    "html-webpack-plugin": "^4.4.1",
-    "mini-css-extract-plugin": "^0.9.0",
-    "mkdirp": "~0.5.1",
-    "node-sass": "^4.14.1",
-    "sass-loader": "^8.0.2",
-    "style-loader": "^1.2.1",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12",
-    "webpack-dev-middleware": "^3.7.2",
-    "serialize-javascript": ">=3.1.0",
-    "node-fetch": ">=2.6.1"
+    "mkdirp": "1.0.4",
+    "node-fetch": ">=2.6.1",
+    "parcel-bundler": "1.12.4",
+    "parcel-plugin-clean-easy": "^1.0.2",
+    "serialize-javascript": "5.0.1"
   },
   "dependencies": {
-    "@tensorflow/tfjs-node": "2.8.1",
-    "adm-zip": "^0.5.1",
+    "@tensorflow/tfjs-node": "3.2.0",
+    "adm-zip": "^0.5.3",
     "argparse": "^2.0.1",
     "dotenv": "^8.2.0",
-    "pm2": "4.5.1",
-    "socket.io": "~3.0.4",
-    "socket.io-client": "~3.0.4"
+    "pm2": "^4.5.5",
+    "socket.io": "3.1.2",
+    "socket.io-client": "3.1.2"
   }
 }

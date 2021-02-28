@@ -13,7 +13,7 @@ if (process) {
 module.exports = {
   MAIN: {
     PORT: Number(conf.env.PORT) || 8081,
-    CLIENT_PORT: Number(conf.env.CLIENT_PORT) || 3000,
+    CLIENT_PORT: Number(conf.env.CLIENT_PORT) || 1234,
     PATH_DATA_FILES: conf.env.PATH_DATA_FILES || '',
     TIMEOUT_BETWEEN_EPOCHS_MS: Number(conf.env.TIMEOUT_BETWEEN_EPOCHS_MS) || 500,
     NUMBER_TRAINING_ITERATIONS: Number(conf.env.NUMBER_TRAINING_ITERATIONS) || 10,
