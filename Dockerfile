@@ -1,6 +1,6 @@
 # Dockerfile
 # The FROM directive sets the Base Image for subsequent instructions
-FROM nikolaik/python-nodejs:python3.7-nodejs12
+FROM docker.io/nikolaik/python-nodejs:python3.7-nodejs12
 
 # Replace shell with bash so we can source files
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
