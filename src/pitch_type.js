@@ -1,11 +1,10 @@
 const path = require('path');
 const fs = require('fs');
 const tf = require('@tensorflow/tfjs');
-const stat = require('fs').statSync;
 const AdmZip = require('adm-zip');
 
 const config = require('../config');
-
+const { statSync : stat } = fs;
 // util function to normalize a value between a given range.
 function normalize(value, min, max) {
   if (min === undefined || max === undefined) {
@@ -258,7 +257,7 @@ async function loadModel(filename, sample) {
     // console.info(`${values}`);
     const resultPredict = model.predict(tf.tensor(values, [1, values.length])).arraySync();
 
-    // console.info(`${resultPredict}`);
+    console.info(`${resultPredict}`);
   } catch (err) {
     console.error('no access!', err);
   }
