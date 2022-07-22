@@ -5,9 +5,9 @@
       "script": "./src/server.js",
       "merge_logs": true,
       "max_restarts": 20,
-      "instances": 1,
+      "instances": 4,
       "node_args": "--max_old_space_size=8192",
-      "max_memory_restart": "800M",
+      "max_memory_restart": "200M",
       "env": {
         "PORT": 8081,
         "NODE_ENV": "production",
@@ -20,7 +20,7 @@
     },
     {
       "name": "baseball-tensorflow-app-client",
-      "script": "./server_app.js",
+      "script": "./client.js",
       "node_args": "--max_old_space_size=8192",
       "instances": 1,
       "max_memory_restart": "200M",
