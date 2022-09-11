@@ -34,8 +34,8 @@
     "socket.io-client": "^4.3.2"
   },
   "engines": {
-    "node": "v16.15.1",
-    "npm": "8.11.0"
+    "node": "v16.17.0",
+    "npm": "8.15.0"
   },
   "overrides": {
     "postcss": "8.2.13",
@@ -50,6 +50,7 @@
     "terser": "5.14.2",
     "engine.io": "4.1.2",
     "ansi-regex": "5.0.1",
-    "unset-value": "2.0.1"
+    "unset-value": "2.0.1",
+    "vm2": "3.9.9"
   }
 }
