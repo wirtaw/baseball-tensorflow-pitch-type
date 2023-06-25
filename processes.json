@@ -20,7 +20,8 @@
     },
     {
       "name": "baseball-tensorflow-app-client",
-      "script": "./server_app.js",
+      "script": "npm",
+      "args": "pro",
       "node_args": "--max_old_space_size=8192",
       "instances": 1,
       "max_memory_restart": "200M",
