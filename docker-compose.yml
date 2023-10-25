@@ -6,4 +6,4 @@ services:
       - ./:/var/www/app/baseball-tensorflow-app
     ports:
       - "8081:8081"
-      - "3000:3000"
+      - "1234:1234"
