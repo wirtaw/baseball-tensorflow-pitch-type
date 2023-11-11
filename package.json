@@ -25,6 +25,12 @@
     "serialize-javascript": "^6.0.1"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^1.9.7",
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.44.0",
+    "@opentelemetry/instrumentation": "^0.44.0",
+    "@opentelemetry/instrumentation-socket.io": "^0.34.2",
+    "@opentelemetry/sdk-node": "^0.44.0",
+    "@opentelemetry/sdk-trace-base": "^1.17.1",
     "adm-zip": "^0.5.10",
     "argparse": "^2.0.1",
     "dotenv": "^10.0.0",
