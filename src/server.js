@@ -4,7 +4,30 @@ require('@tensorflow/tfjs-node');
 const path = require('node:path');
 const http = require('node:http');
 const socketio = require('socket.io');
-const pitchType = require('./pitch_type');
+const pino = require('pino');
+const logger = pino();
+const loggerHttp = require('pino-http')({
+  quietReqLogger: true,
+  transport: {
+    target: 'pino-http-print',
+    options: {
+      destination: 1,
+      all: true,
+      translateTime: true
+    }
+  }
+});
+
+const { 
+  modelList,
+  predictSample,
+  trainingData,
+  evaluate,
+  saveModel,
+  loadModel,
+  model,
+  exportModel
+} = require('./pitch_type');
 
 const config = require(path.join(__dirname, '../config'));
 
@@ -19,7 +42,13 @@ function sleep(ms) {
 // Main function to start server, perform model training, and emit stats via the socket connection
 async function run() {
   const port = process.env.PORT || PORT;
-  const server = http.createServer();
+  const server = http.createServer((req, res) => {
+    res[loggerHttp.startTime] = Date.now()
+  
+    loggerHttp(req, res);
+    res.log.info('log is available on both req and res');
+    res.end('hello world')
+  });
   const io = socketio(server, {
     serveClient: false,
     // below are engine.IO options
@@ -33,39 +62,39 @@ async function run() {
   });
 
   server.listen(port, () => {
-    console.log(`  > Running socket on port: ${port}`);
+    logger.info(`  > Running socket on port: ${port}`);
   });
 
   io.on('connection', (socket) => {
     socket.on('getModels', async () => {
-      io.emit('modelList', await pitchType.modelList());
+      io.emit('modelList', await modelList());
     });
 
     socket.on('predictSample', async (sample) => {
-      console.info(`predict sample ${JSON.stringify(sample)}`);
-      io.emit('predictResult', await pitchType.predictSample(sample));
+      logger.info(`predict sample ${JSON.stringify(sample)}`);
+      io.emit('predictResult', await predictSample(sample));
     });
 
     socket.on('trainModel', async (data) => {
-      console.info(`trainModel ${JSON.stringify(data)}`);
+      logger.info(`trainModel ${JSON.stringify(data)}`);
 
       const numTrainingIterations = data.iterations || config.MAIN.NUMBER_TRAINING_ITERATIONS;
       for (let i = 0; i < numTrainingIterations; i++) {
-        console.info(`Training iteration : ${i + 1} / ${numTrainingIterations}`);
-        await pitchType.model.fitDataset(pitchType.trainingData, {epochs: data.epoch});
-        const accuracy = await pitchType.evaluate(true);
+        logger.info(`Training iteration : ${i + 1} / ${numTrainingIterations}`);
+        await model.fitDataset(trainingData, {epochs: data.epoch});
+        const accuracy = await evaluate(true);
         io.emit('predictStep', {percent: Math.ceil(((i + 1) / numTrainingIterations * 100)), accuracy});
         await sleep(TIMEOUT_BETWEEN_EPOCHS_MS);
       }
 
       io.emit('trainingComplete', true);
 
-      await pitchType.saveModel(data.name);
+      await saveModel(data.name);
     });
 
     socket.on('loadModel', async (data) => {
-      // console.info(`loadModel ${JSON.stringify(data)}`);
-      const loadResult = await pitchType.loadModel(data.name, data.sample);
+      logger.info(`loadModel ${JSON.stringify(data)}`);
+      const loadResult = await loadModel(data.name, data.sample);
 
       if (loadResult) {
         io.emit('predictStep', {percent: 100, accuracy: loadResult});
@@ -74,8 +103,8 @@ async function run() {
     });
 
     socket.on('exportModel', async (data) => {
-      // console.info(`loadModel ${JSON.stringify(data)}`);
-      const exportResult = await pitchType.exportModel(data.name);
+      logger.info(`exportModel ${JSON.stringify(data)}`);
+      const exportResult = await exportModel(data.name);
 
       if (exportResult) {
         io.emit('downloadModal', exportResult);

@@ -1,8 +1,11 @@
 import io from 'socket.io-client';
+import pino from 'pino';
 import config from './../config.client.js';
 
+const logger = pino({ level: 'info' });
+
 if (process.env.NODE_ENV !== 'production') {
-  console.info('Client load');
+  logger.info('Client load');
 }
 
 const predictContainer = document.getElementById('predictContainer');
@@ -74,10 +77,10 @@ predictButton.onclick = () => {
       }
     }
   }
-  // console.info(testSample);
+  // logger.info(testSample);
   testSample = Object.values(testData);
-  // console.info(output);
-  // console.info(testSample);
+  // logger.info(output);
+  // logger.info(testSample);
   socket.emit('predictSample', testSample);
 };
 
@@ -133,8 +136,8 @@ socket.on('modelList', (data) => {
     document.getElementById(buttonsLoadId).addEventListener('click', (
       function(idLocal) {
         return function() {
-          // console.dir(idLocal, {depth: 1});
-          // console.dir(testSample, {depth: 1});
+          // logger.dir(idLocal, {depth: 1});
+          // logger.dir(testSample, {depth: 1});
           socket.emit('loadModel', {name: idLocal, sample: testSample});
         };
       })(id));
@@ -201,7 +204,7 @@ socket.on('predictResult', (result) => {
 });
 
 socket.on('downloadModal', () => {
-  // console.dir(str, {depth: 1});
+  // logger.dir(str, {depth: 1});
 });
 
 socket.on('disconnect', () => {
@@ -215,7 +218,7 @@ function plotPredictResult(result) {
   predictButton.disabled = false;
   document.getElementById('predictResult').innerHTML = result || '0';
   if (process.env.NODE_ENV !== 'production') { 
-    console.info(result); 
+    logger.info(result); 
   }
 }
 

@@ -175,9 +175,7 @@ Full tech stack [here](/techstack.md)
 |[argparse](https://www.npmjs.com/argparse)|v1.0.10|11/12/20|Poplavskij Vladimir |MIT|N/A|
 |[babel-eslint](https://www.npmjs.com/babel-eslint)|v10.1.0|11/13/21|Poplavskij Vladimir |MIT|N/A|
 |[eslint-config-loopback](https://www.npmjs.com/eslint-config-loopback)|v13.1.0|11/13/21|Poplavskij Vladimir |MIT|N/A|
-|[mkdirp](https://www.npmjs.com/mkdirp)|v0.5.6|02/28/21|Poplavskij Vladimir |MIT|N/A|
 |[parcel-bundler](https://www.npmjs.com/parcel-bundler)|v1.12.5|07/22/22|Poplavskij Vladimir |MIT|N/A|
-|[serialize-javascript](https://www.npmjs.com/serialize-javascript)|v6.0.1|01/29/23|Poplavskij Vladimir |BSD-3-Clause|N/A|
 |[socket.io-client](https://www.npmjs.com/socket.io-client)|v4.7.2|10/08/23|Vladimir Poplavskij |MIT|N/A|
 
 <br/>

@@ -2,6 +2,8 @@ const path = require('path');
 const fs = require('fs');
 const tf = require('@tensorflow/tfjs-node');
 const AdmZip = require('adm-zip');
+const pino = require('pino');
+const logger = pino();
 
 const config = require('../config');
 const { statSync : stat } = fs;
@@ -54,7 +56,7 @@ function newArchive(zipFileName, pathNames) {
     }
   });
 
-  console.info(`newArchive ${zipFileName}`);
+  logger.info(`newArchive ${zipFileName}`);
   zip.writeZip(zipFileName);
 }
 
@@ -146,12 +148,12 @@ async function predictSample(sample) {
     normalize(sample[6], START_SPEED_MIN, START_SPEED_MAX),
     sample[7],
   ];
-  console.info(`values ${values}`);
+  logger.info(`values ${values}`);
   const tensor = tf.tensor(values, [1, values.length]);
-  console.info(`tensor ${tensor.toString()}`);
+  logger.info(`tensor ${tensor.toString()}`);
   const result = model.predict(tensor).arraySync();
 
-  console.info(`result ${JSON.stringify(result)}`);
+  logger.info(`result ${JSON.stringify(result)}`);
   let maxValue = 0;
   let predictedPitch = 7;
   for (let i = 0; i < NUM_PITCH_CLASSES; i++) {
@@ -160,7 +162,7 @@ async function predictSample(sample) {
       maxValue = result[0][i];
     }
   }
-  console.info(`predictedPitch ${predictedPitch}`);
+  logger.info(`predictedPitch ${predictedPitch}`);
   // console.info(`result ${result} predictedPitch ${predictedPitch} '${pitchFromClassNum(predictedPitch)}'`);
   return pitchFromClassNum(predictedPitch);
 }
@@ -212,7 +214,7 @@ async function modelList() {
         }
       });
     } catch (err) {
-      console.error('no access to model!');
+      logger.error(new Error('no access to model!'));
       resolve([]);
     }
   });
@@ -227,11 +229,11 @@ async function saveModel(filename) {
         includeOptimizer: true,
       });
   } catch (err) {
-    console.error('no access!');
+    logger.error(err);
   }
 
-  // debugger;
-  console.dir(saveResults, {depth: 1});
+  //console.dir(saveResults, {depth: 1});
+  logger.info(`saveResults ${JSON.stringify(saveResults)}`);
 }
 
 async function loadModel(filename, sample) {
@@ -257,9 +259,9 @@ async function loadModel(filename, sample) {
     // console.info(`${values}`);
     const resultPredict = model.predict(tf.tensor(values, [1, values.length])).arraySync();
 
-    console.info(`${resultPredict}`);
+    logger.info(`resultPredict ${resultPredict}`);
   } catch (err) {
-    console.error('no access!', err);
+    logger.error(err);
   }
 
   return result;
@@ -277,7 +279,7 @@ async function exportModel(modelname) {
     result = (fs.readFileSync(zipName, {encode: 'utf8'})).toString();
     // console.dir(result, {depth: 1});
   } catch (err) {
-    console.error('no export!', err);
+    logger.error(err);
   }
 
   return result;
