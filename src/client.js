@@ -1,7 +1,9 @@
 import io from 'socket.io-client';
 import config from './../config.client.js';
 
-console.info('Client load');
+if (process.env.NODE_ENV !== 'production') {
+  console.info('Client load');
+}
 
 const predictContainer = document.getElementById('predictContainer');
 const predictResultColumn = document.getElementById('predictResultColumn');
@@ -93,8 +95,8 @@ socket.on('predictStep', (data) => {
   document.getElementById('trainingProgress').value = data.percent;
   accuracy.push(data.accuracy);
   const innerHtml = document.getElementById('logContainer-accuracy').innerHTML;
-  document.getElementById('logContainer-accuracy').innerHTML = `${innerHtml},
-   ${JSON.stringify(data.accuracy, null, ' ')}`;
+  document.getElementById('logContainer-accuracy').innerHTML = (innerHtml && data?.accuracy) ? `${innerHtml},
+   ${JSON.stringify(data.accuracy, null, ' ')}` : '';
 });
 
 socket.on('modelList', (data) => {
@@ -116,7 +118,7 @@ socket.on('modelList', (data) => {
     const buttonText = document.createElement('button');
     buttonText.setAttribute('class', 'button is-text');
     buttonText.setAttribute('id', buttonsTextId);
-    buttonText.innerHTML = `${name}`;
+    buttonText.innerHTML = name.trim() || 'Unnamed model';
 
     buttonsBlock.appendChild(buttonText);
 
@@ -198,7 +200,7 @@ socket.on('predictResult', (result) => {
   learnButton.disabled = false;
 });
 
-socket.on('downloadModal', (str) => {
+socket.on('downloadModal', () => {
   // console.dir(str, {depth: 1});
 });
 
@@ -211,8 +213,10 @@ socket.on('disconnect', () => {
 
 function plotPredictResult(result) {
   predictButton.disabled = false;
-  document.getElementById('predictResult').innerHTML = result;
-  console.info(result);
+  document.getElementById('predictResult').innerHTML = result || '0';
+  if (process.env.NODE_ENV !== 'production') { 
+    console.info(result); 
+  }
 }
 
 /*

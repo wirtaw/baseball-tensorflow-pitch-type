@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const tf = require('@tensorflow/tfjs');
+const tf = require('@tensorflow/tfjs-node');
 const AdmZip = require('adm-zip');
 
 const config = require('../config');
