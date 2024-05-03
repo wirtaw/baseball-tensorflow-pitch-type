@@ -19,5 +19,6 @@ module.exports = {
     NUMBER_TRAINING_ITERATIONS: Number(conf.env.NUMBER_TRAINING_ITERATIONS) || 10,
     RECONNECTION_DELAY: Number(conf.env.RECONNECTION_DELAY) || 300,
     RECONNECTION_DELAY_MAX: Number(conf.env.RECONNECTION_DELAY_MAX) || 300,
+    NEW_RELIC_API_KEY: conf.env.NEW_RELIC_API_KEY || '',
   },
 };

@@ -1,0 +1,10 @@
+{
+  "rules": {
+    "files": "warn",
+    "classMembers": "warn",
+    "duplicates": "warn"
+  },
+  "src": {
+    "entry": "src/*.js"
+  }
+}

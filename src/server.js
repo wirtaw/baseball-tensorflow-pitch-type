@@ -1,7 +1,8 @@
+require('./opentelemetry');
 require('@tensorflow/tfjs-node');
 
-const path = require('path');
-const http = require('http');
+const path = require('node:path');
+const http = require('node:http');
 const socketio = require('socket.io');
 const pitchType = require('./pitch_type');
 
